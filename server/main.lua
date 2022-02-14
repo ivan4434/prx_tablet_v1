@@ -1,5 +1,5 @@
 PRX = nil
-TriggerEvent('esx:getSharedObject', function(obj) PRX = obj end)
+TriggerEvent('prx:getSharedObject', function(obj) PRX = obj end)
 
 PRX.RegisterServerCallback('prx_tablet:getPlayerInfo', function(source, cb)
     local xPlayer = PRX.GetPlayerFromId(source)
@@ -16,6 +16,8 @@ PRX.RegisterServerCallback('prx_tablet:getPlayerInfo', function(source, cb)
     cb(info)
 	end)
 end)
+
+PRX.RegisterServerCallback('prx_tablet:getItem', function(source, cb)cb(PRX.GetPlayerFromId(source).getInventoryItem('tablet').count)end)
 
 PRX.RegisterServerCallback('prx_tablet:getOwnedVehicles', function(source, cb)
   local xPlayer = PRX.GetPlayerFromId(source)
@@ -120,8 +122,8 @@ AddEventHandler('prx_tablet:addDelito', function(identifier, label, price, time)
     MySQL.Async.execute('INSERT INTO prx_tab_lspd_hist (identifier, content, fine, time, officer) VALUES (@identifier, @content, @fine, @time, @officer)', {
       ['@identifier'] = identifier,
       ['@content'] = label,
-      ['@fine'] = tostring(price)..' $',
-      ['@time'] = time,
+      ['@fine'] = tostring(price),
+      ['@time'] = tostring(time),
       ['@officer'] = xPlayer.getJob().grade_label..' '..xPlayer.getName(),
   }, function(rowsChanged)
   end)
@@ -424,7 +426,7 @@ end)
 PRX.RegisterServerCallback('prx_tablet:getStockItems', function(source, cb)
   local xPlayer = PRX.GetPlayerFromId(source)
   local job = xPlayer.getJob().name
-	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_'..job, function(inventory)
+	TriggerEvent('prx_addoninventory:getSharedInventory', 'society_'..job, function(inventory)
     if Config.UseJobCreator == true then
       MySQL.Async.fetchAll('SELECT * FROM jobs_data WHERE job_name = @job AND type = @type', {
         ['@type'] = 'stash',

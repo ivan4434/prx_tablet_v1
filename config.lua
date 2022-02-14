@@ -2,6 +2,7 @@ Config = {}
 
 Config.UseJobCreator = true -- Use Job Creator
 
+Config.UseItem = false --Use tablet ITEM
 
 Config.VIPinPerfil = false --Get the column vip in the users table
 Config.PenalCode = {

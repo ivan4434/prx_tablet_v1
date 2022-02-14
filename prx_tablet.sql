@@ -76,3 +76,6 @@ CREATE TABLE `prx_tab_meca_notes` (
 )
 COLLATE='utf8mb4_general_ci'
 ENGINE=InnoDB
+
+INSERT INTO `items` (`name`, `label`, `weight`, `rare`, `can_remove`) VALUES
+	('tablet', 'Tablet', 1, 0, 1);

@@ -3,7 +3,7 @@ local abierto = false
 local PlayerProps = {}
 Citizen.CreateThread(function()
     while PRX == nil do
-        TriggerEvent('esx:getSharedObject', function(obj) PRX = obj end)
+        TriggerEvent('prx:getSharedObject', function(obj) PRX = obj end)
         Citizen.Wait(0)
     end
 end)
@@ -20,16 +20,35 @@ RegisterKeyMapping(
 RegisterCommand('tablet', function()
     PRX.TriggerServerCallback('prx_tablet:getPlayerInfo', function(playerInfo) 
         if abierto == false then
-            --ExecuteCommand('e tablet2')
-            startAnim('amb@code_human_in_bus_passenger_idles@female@tablet@idle_a', 'idle_a')
-            Citizen.Wait(1000)
-            SetNuiFocus(true, true)
-            SendNUIMessage({
-                playerInfo = playerInfo,
-                vip = Config.VIPinPerfil,
-                abrir = true
-            })
-            abierto = true
+            if Config.UseItem == true then
+                PRX.TriggerServerCallback('prx_tablet:getItem', function(item) 
+                    if item >= 1 then
+                        --ExecuteCommand('e tablet2')
+                        startAnim('amb@code_human_in_bus_passenger_idles@female@tablet@idle_a', 'idle_a')
+                        Citizen.Wait(1000)
+                        SetNuiFocus(true, true)
+                        SendNUIMessage({
+                            playerInfo = playerInfo,
+                            vip = Config.VIPinPerfil,
+                            abrir = true
+                        })
+                        abierto = true
+                    else
+                        PRX.ShowNotification('No tienes una tablet encima')
+                    end
+                end)
+            else
+                --ExecuteCommand('e tablet2')
+                startAnim('amb@code_human_in_bus_passenger_idles@female@tablet@idle_a', 'idle_a')
+                Citizen.Wait(1000)
+                SetNuiFocus(true, true)
+                SendNUIMessage({
+                    playerInfo = playerInfo,
+                    vip = Config.VIPinPerfil,
+                    abrir = true
+                })
+                abierto = true
+            end
         elseif abierto == true then
             SetNuiFocus(false, false)
             SendNUIMessage({
