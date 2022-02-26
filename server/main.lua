@@ -1,5 +1,5 @@
 PRX = nil
-TriggerEvent('prx:getSharedObject', function(obj) PRX = obj end)
+TriggerEvent('esx:getSharedObject', function(obj) PRX = obj end)
 
 PRX.RegisterServerCallback('prx_tablet:getPlayerInfo', function(source, cb)
     local xPlayer = PRX.GetPlayerFromId(source)

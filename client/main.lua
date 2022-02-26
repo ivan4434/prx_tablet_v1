@@ -3,7 +3,7 @@ local abierto = false
 local PlayerProps = {}
 Citizen.CreateThread(function()
     while PRX == nil do
-        TriggerEvent('prx:getSharedObject', function(obj) PRX = obj end)
+        TriggerEvent('esx:getSharedObject', function(obj) PRX = obj end)
         Citizen.Wait(0)
     end
 end)
