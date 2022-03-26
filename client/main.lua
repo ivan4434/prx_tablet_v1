@@ -1,9 +1,9 @@
-PRX = nil
+ESX = nil
 local abierto = false
 local PlayerProps = {}
 Citizen.CreateThread(function()
-    while PRX == nil do
-        TriggerEvent('esx:getSharedObject', function(obj) PRX = obj end)
+    while ESX == nil do
+        TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
         Citizen.Wait(0)
     end
 end)
@@ -18,10 +18,10 @@ RegisterKeyMapping(
 )
 
 RegisterCommand('tablet', function()
-    PRX.TriggerServerCallback('prx_tablet:getPlayerInfo', function(playerInfo) 
+    ESX.TriggerServerCallback('prx_tablet:getPlayerInfo', function(playerInfo) 
         if abierto == false then
             if Config.UseItem == true then
-                PRX.TriggerServerCallback('prx_tablet:getItem', function(item) 
+                ESX.TriggerServerCallback('prx_tablet:getItem', function(item) 
                     if item >= 1 then
                         --ExecuteCommand('e tablet2')
                         startAnim('amb@code_human_in_bus_passenger_idles@female@tablet@idle_a', 'idle_a')
@@ -34,7 +34,7 @@ RegisterCommand('tablet', function()
                         })
                         abierto = true
                     else
-                        PRX.ShowNotification('No tienes una tablet encima')
+                        ESX.ShowNotification('No tienes una tablet encima')
                     end
                 end)
             else
@@ -77,7 +77,7 @@ RegisterNUICallback('cerrar_tablet', function()
 end)
 
 RegisterNUICallback('get_owned_vehicles', function()
-    PRX.TriggerServerCallback('prx_tablet:getOwnedVehicles', function(vehicles) 
+    ESX.TriggerServerCallback('prx_tablet:getOwnedVehicles', function(vehicles) 
         local coches = {}
         for i=1, #vehicles, 1 do
             local properties = json.decode(vehicles[i].vehicle)
@@ -93,7 +93,7 @@ RegisterNUICallback('get_owned_vehicles', function()
 end)
 
 RegisterNUICallback('get_owned_houses', function()
-    PRX.TriggerServerCallback('prx_tablet:getOwnedHouses', function(houses) 
+    ESX.TriggerServerCallback('prx_tablet:getOwnedHouses', function(houses) 
         local propiedades = {}
         for i=1, #houses, 1 do
             local properties = json.decode(houses[i].key_data)
@@ -110,7 +110,7 @@ end)
 RegisterNUICallback('lspd_search_person', function(nom)
     local words = {}
     for word in nom:gmatch("%w+") do table.insert(words, word) end
-    PRX.TriggerServerCallback('search_pers', function(info) 
+    ESX.TriggerServerCallback('search_pers', function(info) 
             SendNUIMessage({
                 foundPlayers = info
             })
@@ -118,7 +118,7 @@ RegisterNUICallback('lspd_search_person', function(nom)
 end)
 
 RegisterNUICallback('lspd_search_car', function(nom)
-    PRX.TriggerServerCallback('prx_tablet:searchOwnedVehicles', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:searchOwnedVehicles', function(info) 
         local coches = {}
         for i=1, #info, 1 do
             local properties = json.decode(info[i].vehicle)
@@ -135,7 +135,7 @@ RegisterNUICallback('lspd_search_car', function(nom)
 end)
 
 RegisterNUICallback('get_other_person_info', function(nom)
-    PRX.TriggerServerCallback('prx_tablet:getOtherPlayerInfo', function(plInfo) 
+    ESX.TriggerServerCallback('prx_tablet:getOtherPlayerInfo', function(plInfo) 
         lastIdentifier = ''
         SendNUIMessage({
             otherLInfo = plInfo
@@ -204,7 +204,7 @@ end)
 
 RegisterNetEvent('prx_tablet:updateDelitos')
 AddEventHandler('prx_tablet:updateDelitos', function(identifier)
-    PRX.TriggerServerCallback('prx_tablet:getDelitos', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:getDelitos', function(info) 
         SendNUIMessage({
             delitosPersona = info
         })    
@@ -212,7 +212,7 @@ AddEventHandler('prx_tablet:updateDelitos', function(identifier)
 end)
 
 RegisterNUICallback('get_delitos', function()
-    PRX.TriggerServerCallback('prx_tablet:getDelitos', function(info)
+    ESX.TriggerServerCallback('prx_tablet:getDelitos', function(info)
         SendNUIMessage({
             delitosPersona = info
         })    
@@ -220,7 +220,7 @@ RegisterNUICallback('get_delitos', function()
 end)
 
 RegisterNUICallback('get_delitos_perf', function()
-    PRX.TriggerServerCallback('prx_tablet:getDelitosPerf', function(info)
+    ESX.TriggerServerCallback('prx_tablet:getDelitosPerf', function(info)
         SendNUIMessage({
             delitosPerfil = info
         })    
@@ -237,7 +237,7 @@ end)
 
 RegisterNetEvent('prx_tablet:updateNotas')
 AddEventHandler('prx_tablet:updateNotas', function(identifier)
-    PRX.TriggerServerCallback('prx_tablet:getNotas', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:getNotas', function(info) 
         SendNUIMessage({
             notasPersona = info
         })    
@@ -253,7 +253,7 @@ RegisterNUICallback('del_nota', function(info)
 end)
 
 RegisterNUICallback('lspd_get_veh', function()
-    PRX.TriggerServerCallback('prx_tablet:getOtherVehicles', function(vehicles) 
+    ESX.TriggerServerCallback('prx_tablet:getOtherVehicles', function(vehicles) 
         local coches = {}
         for i=1, #vehicles, 1 do
             local properties = json.decode(vehicles[i].vehicle)
@@ -268,7 +268,7 @@ RegisterNUICallback('lspd_get_veh', function()
 end)
 
 RegisterNUICallback('lspd_get_prop', function()
-    PRX.TriggerServerCallback('prx_tablet:getOtherHouses', function(houses) 
+    ESX.TriggerServerCallback('prx_tablet:getOtherHouses', function(houses) 
         local propiedades = {}
         for i=1, #houses, 1 do
             local properties = json.decode(houses[i].key_data)
@@ -287,7 +287,7 @@ end)
 
 RegisterNetEvent('prx_tablet:updateSearch')
 AddEventHandler('prx_tablet:updateSearch', function(identifier)
-    PRX.TriggerServerCallback('prx_tablet:getSearch', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:getSearch', function(info) 
         for i = 1, #info, 1 do
             SendNUIMessage({
                 busquedaPersona = json.decode(info[i].search)
@@ -314,7 +314,7 @@ end)
 
 RegisterNetEvent('prx_tablet:updateDanger')
 AddEventHandler('prx_tablet:updateDanger', function(identifier)
-    PRX.TriggerServerCallback('prx_tablet:getDanger', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:getDanger', function(info) 
         for i = 1, #info, 1 do
             SendNUIMessage({
                 personaDanger = json.decode(info[i].dangerous)
@@ -337,7 +337,7 @@ end)
 
 RegisterNUICallback('get_all_byq', function()
     local totalBusquedas = {}
-    PRX.TriggerServerCallback('prx_tablet:getAllSearch', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:getAllSearch', function(info) 
         for i = 1, #info, 1 do
             local usuarios = json.decode(info[i].search)
             if usuarios.inSearch == true then
@@ -378,7 +378,7 @@ end)
 RegisterNUICallback('ems_search_person', function(nom)
     local words = {}
     for word in nom:gmatch("%w+") do table.insert(words, word) end
-    PRX.TriggerServerCallback('search_pers', function(info) 
+    ESX.TriggerServerCallback('search_pers', function(info) 
             SendNUIMessage({
                 foundEMSPlayers = info
             })
@@ -386,7 +386,7 @@ RegisterNUICallback('ems_search_person', function(nom)
 end)
 
 RegisterNUICallback('ems_get_other_person_info', function(nom)
-    PRX.TriggerServerCallback('prx_tablet:getOtherPlayerInfo', function(plInfo) 
+    ESX.TriggerServerCallback('prx_tablet:getOtherPlayerInfo', function(plInfo) 
         lastIdentifier = ''
         SendNUIMessage({
             otherEMSLInfo = plInfo
@@ -426,7 +426,7 @@ end)
 
 RegisterNetEvent('prx_tablet:updateHistEMS')
 AddEventHandler('prx_tablet:updateHistEMS', function(identifier)
-    PRX.TriggerServerCallback('prx_tablet:getHistEMS', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:getHistEMS', function(info) 
         SendNUIMessage({
             histmedicoPersona = info
         })    
@@ -438,7 +438,7 @@ RegisterNUICallback('del_hist_ems', function(info)
 end)
 
 RegisterNUICallback('get_hist_ems', function(id)
-    PRX.TriggerServerCallback('prx_tablet:getHistEMS', function(info)
+    ESX.TriggerServerCallback('prx_tablet:getHistEMS', function(info)
         SendNUIMessage({
             histmedicoPersona = info
         })    
@@ -446,7 +446,7 @@ RegisterNUICallback('get_hist_ems', function(id)
 end)
 
 RegisterNUICallback('get_hist_ems_perf', function()
-    PRX.TriggerServerCallback('prx_tablet:getHistEmsPerf', function(info)
+    ESX.TriggerServerCallback('prx_tablet:getHistEmsPerf', function(info)
         SendNUIMessage({
             medicoPerfil = info
         })    
@@ -459,7 +459,7 @@ end)
 
 RegisterNetEvent('prx_tablet:updateNotasEms')
 AddEventHandler('prx_tablet:updateNotasEms', function(identifier)
-    PRX.TriggerServerCallback('prx_tablet:getNotasEms', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:getNotasEms', function(info) 
         SendNUIMessage({
             notasEMSPersona = info
         })    
@@ -482,20 +482,20 @@ RegisterNUICallback('cambiar_size', function(label)
 end)
 
 RegisterNUICallback('get_info_empresa', function()
-    PRX.TriggerServerCallback('prx_tablet:getEmpresaInfo', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:getEmpresaInfo', function(info) 
         SendNUIMessage({trabajadores = info})
     end)
-    PRX.TriggerServerCallback('prx_tablet:getStockItems', function(items)
+    ESX.TriggerServerCallback('prx_tablet:getStockItems', function(items)
         SendNUIMessage({stockItems = items})
     end)
 end)
 
 RegisterNetEvent('prx_tablet:updateEmpresa')
 AddEventHandler('prx_tablet:updateEmpresa', function()
-    PRX.TriggerServerCallback('prx_tablet:getEmpresaInfo', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:getEmpresaInfo', function(info) 
         SendNUIMessage({trabajadores = info})
     end)
-    PRX.TriggerServerCallback('prx_tablet:getStockItems', function(items)
+    ESX.TriggerServerCallback('prx_tablet:getStockItems', function(items)
 		SendNUIMessage({stockItems = items})
 	end)
 end)
@@ -540,7 +540,7 @@ end)
 RegisterNUICallback('meca_search_person', function(nom)
     local words = {}
     for word in nom:gmatch("%w+") do table.insert(words, word) end
-    PRX.TriggerServerCallback('search_pers', function(info) 
+    ESX.TriggerServerCallback('search_pers', function(info) 
             SendNUIMessage({
                 foundmecaPlayers = info
             })
@@ -548,7 +548,7 @@ RegisterNUICallback('meca_search_person', function(nom)
 end)
 
 RegisterNUICallback('meca_get_other_person_info', function(nom)
-    PRX.TriggerServerCallback('prx_tablet:getOtherPlayerInfo', function(plInfo) 
+    ESX.TriggerServerCallback('prx_tablet:getOtherPlayerInfo', function(plInfo) 
         lastIdentifier = ''
         SendNUIMessage({
             othermecaLInfo = plInfo
@@ -588,7 +588,7 @@ end)
 
 RegisterNetEvent('prx_tablet:updateHistmeca')
 AddEventHandler('prx_tablet:updateHistmeca', function(identifier)
-    PRX.TriggerServerCallback('prx_tablet:getHistmeca', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:getHistmeca', function(info) 
         SendNUIMessage({
             histmecanicoPersona = info
         })    
@@ -600,7 +600,7 @@ RegisterNUICallback('del_hist_meca', function(info)
 end)
 
 RegisterNUICallback('get_hist_meca', function(id)
-    PRX.TriggerServerCallback('prx_tablet:getHistmeca', function(info)
+    ESX.TriggerServerCallback('prx_tablet:getHistmeca', function(info)
         SendNUIMessage({
             histmecanicoPersona = info
         })    
@@ -608,7 +608,7 @@ RegisterNUICallback('get_hist_meca', function(id)
 end)
 
 RegisterNUICallback('get_hist_meca_perf', function()
-    PRX.TriggerServerCallback('prx_tablet:getHistmecaPerf', function(info)
+    ESX.TriggerServerCallback('prx_tablet:getHistmecaPerf', function(info)
         SendNUIMessage({
             mecanicoPerfil = info
         })    
@@ -621,7 +621,7 @@ end)
 
 RegisterNetEvent('prx_tablet:updateNotasmeca')
 AddEventHandler('prx_tablet:updateNotasmeca', function(identifier)
-    PRX.TriggerServerCallback('prx_tablet:getNotasmeca', function(info) 
+    ESX.TriggerServerCallback('prx_tablet:getNotasmeca', function(info) 
         SendNUIMessage({
             notasmecaPersona = info
         })    
@@ -638,7 +638,7 @@ end)
 
 
 function startAnim(lib, anim)
-    PRX.Streaming.RequestAnimDict(lib, function()
+    ESX.Streaming.RequestAnimDict(lib, function()
         TaskPlayAnim(PlayerPedId(), lib, anim, 2.0, 2.0, -1, 51, 0.0, false, false, false)
         AddPropToPlayer("prop_cs_tablet", 28422, -0.05, 0.0, 0.0, 0.0, 0.0, 0.0)
     end)
@@ -660,8 +660,10 @@ function AddPropToPlayer(prop1, bone, off1, off2, off3, rot1, rot2, rot3)
 end
 
 function EmoteCancel()
-    ClearPedTasks(GetPlayerPed(-1))
-    ClearPedTasksImmediately(PlayerPedId())
+    if GetVehiclePedIsIn(PlayerPedId(), false) == 0 then
+        ClearPedTasks(PlayerPedId())
+        ClearPedTasksImmediately(PlayerPedId())
+    end
     DestroyAllProps()
 end
 

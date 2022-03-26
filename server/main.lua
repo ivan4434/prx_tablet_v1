@@ -1,8 +1,8 @@
-PRX = nil
-TriggerEvent('esx:getSharedObject', function(obj) PRX = obj end)
+ESX = nil
+TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-PRX.RegisterServerCallback('prx_tablet:getPlayerInfo', function(source, cb)
-    local xPlayer = PRX.GetPlayerFromId(source)
+ESX.RegisterServerCallback('prx_tablet:getPlayerInfo', function(source, cb)
+    local xPlayer = ESX.GetPlayerFromId(source)
     MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier', {
 		['@identifier'] = xPlayer.identifier,
 	}, function(result)
@@ -17,10 +17,10 @@ PRX.RegisterServerCallback('prx_tablet:getPlayerInfo', function(source, cb)
 	end)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getItem', function(source, cb)cb(PRX.GetPlayerFromId(source).getInventoryItem('tablet').count)end)
+ESX.RegisterServerCallback('prx_tablet:getItem', function(source, cb)cb(ESX.GetPlayerFromId(source).getInventoryItem('tablet').count)end)
 
-PRX.RegisterServerCallback('prx_tablet:getOwnedVehicles', function(source, cb)
-  local xPlayer = PRX.GetPlayerFromId(source)
+ESX.RegisterServerCallback('prx_tablet:getOwnedVehicles', function(source, cb)
+  local xPlayer = ESX.GetPlayerFromId(source)
   MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner', {
   ['@owner'] = xPlayer.identifier,
 }, function(result)
@@ -28,7 +28,7 @@ PRX.RegisterServerCallback('prx_tablet:getOwnedVehicles', function(source, cb)
 end)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:searchOwnedVehicles', function(source, cb, plate)
+ESX.RegisterServerCallback('prx_tablet:searchOwnedVehicles', function(source, cb, plate)
   MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE plate LIKE @plate', {
     ['@plate'] = plate..'%',
 }, function(result)
@@ -36,8 +36,8 @@ PRX.RegisterServerCallback('prx_tablet:searchOwnedVehicles', function(source, cb
 end)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getOwnedHouses', function(source, cb)
-  local xPlayer = PRX.GetPlayerFromId(source)
+ESX.RegisterServerCallback('prx_tablet:getOwnedHouses', function(source, cb)
+  local xPlayer = ESX.GetPlayerFromId(source)
   MySQL.Async.fetchAll('SELECT * FROM loaf_keys WHERE identifier = @owner', {
   ['@owner'] = xPlayer.identifier,
 }, function(result)
@@ -45,7 +45,7 @@ PRX.RegisterServerCallback('prx_tablet:getOwnedHouses', function(source, cb)
 end)
 end)
 
-PRX.RegisterServerCallback('search_pers', function(source, cb, words)
+ESX.RegisterServerCallback('search_pers', function(source, cb, words)
   if words[2] == nil and words[1]~=nil then
 
     MySQL.Async.fetchAll('SELECT * FROM users WHERE firstname LIKE @name', {
@@ -64,8 +64,8 @@ PRX.RegisterServerCallback('search_pers', function(source, cb, words)
   end
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getOtherPlayerInfo', function(source, cb, id)
-    local xPlayer = PRX.GetPlayerFromIdentifier(id)
+ESX.RegisterServerCallback('prx_tablet:getOtherPlayerInfo', function(source, cb, id)
+    local xPlayer = ESX.GetPlayerFromIdentifier(id)
     MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier = @identifier', {
 		['@identifier'] = id,
 	}, function(result)
@@ -106,7 +106,7 @@ end)
 
 RegisterServerEvent('prx_tablet:actFoto')
 AddEventHandler('prx_tablet:actFoto', function(foto, id)
-  local xTarget = PRX.GetPlayerFromIdentifier(id)
+  local xTarget = ESX.GetPlayerFromIdentifier(id)
   MySQL.Async.execute('UPDATE users SET foto = @foto WHERE identifier = @identifier', {
     ['@identifier'] = xTarget.identifier,
     ['@foto'] = foto
@@ -117,8 +117,8 @@ end)
 
 RegisterServerEvent('prx_tablet:addDelito')
 AddEventHandler('prx_tablet:addDelito', function(identifier, label, price, time)
-    local xPlayer = PRX.GetPlayerFromId(source)
-    local xTarget = PRX.GetPlayerFromIdentifier(identifier)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local xTarget = ESX.GetPlayerFromIdentifier(identifier)
     MySQL.Async.execute('INSERT INTO prx_tab_lspd_hist (identifier, content, fine, time, officer) VALUES (@identifier, @content, @fine, @time, @officer)', {
       ['@identifier'] = identifier,
       ['@content'] = label,
@@ -144,7 +144,7 @@ AddEventHandler('prx_tablet:addDelito', function(identifier, label, price, time)
   TriggerClientEvent('prx_tablet:updateDelitos', source, identifier)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getDelitos', function(source, cb, id)
+ESX.RegisterServerCallback('prx_tablet:getDelitos', function(source, cb, id)
   MySQL.Async.fetchAll('SELECT * FROM prx_tab_lspd_hist WHERE identifier LIKE @identifier', {
 		['@identifier'] = id,
 	}, function(result)
@@ -153,8 +153,8 @@ PRX.RegisterServerCallback('prx_tablet:getDelitos', function(source, cb, id)
 	end)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getDelitosPerf', function(source, cb)
-  local xPlayer = PRX.GetPlayerFromId(source)
+ESX.RegisterServerCallback('prx_tablet:getDelitosPerf', function(source, cb)
+  local xPlayer = ESX.GetPlayerFromId(source)
   local id = xPlayer.getIdentifier()
   MySQL.Async.fetchAll('SELECT * FROM prx_tab_lspd_hist WHERE identifier LIKE @identifier', {
 		['@identifier'] = id,
@@ -185,7 +185,7 @@ end)
 
 RegisterServerEvent('prx_tablet:añadirNota')
 AddEventHandler('prx_tablet:añadirNota', function(nota, id)
-  local xPlayer = PRX.GetPlayerFromId(source)
+  local xPlayer = ESX.GetPlayerFromId(source)
   MySQL.Async.execute('INSERT INTO prx_tab_lspd_notes (identifier, officer, note) VALUES (@identifier, @sender, @note)', {
     ['@identifier'] = id,
     ['@sender'] = xPlayer.getJob().grade_label..' '..xPlayer.getName(),
@@ -195,7 +195,7 @@ AddEventHandler('prx_tablet:añadirNota', function(nota, id)
   TriggerClientEvent('prx_tablet:updateNotas', source, id)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getNotas', function(source, cb, id)
+ESX.RegisterServerCallback('prx_tablet:getNotas', function(source, cb, id)
   MySQL.Async.fetchAll('SELECT * FROM prx_tab_lspd_notes WHERE identifier LIKE @identifier', {
 		['@identifier'] = id,
 	}, function(result)
@@ -216,7 +216,7 @@ AddEventHandler('prx_tablet:eliminar_nota', function(info, id)
   TriggerClientEvent('prx_tablet:updateNotas', source, id)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getOtherHouses', function(source, cb, id)
+ESX.RegisterServerCallback('prx_tablet:getOtherHouses', function(source, cb, id)
   MySQL.Async.fetchAll('SELECT * FROM loaf_keys WHERE identifier = @owner', {
   ['@owner'] = id,
 }, function(result)
@@ -224,7 +224,7 @@ PRX.RegisterServerCallback('prx_tablet:getOtherHouses', function(source, cb, id)
 end)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getOtherVehicles', function(source, cb, id)
+ESX.RegisterServerCallback('prx_tablet:getOtherVehicles', function(source, cb, id)
   MySQL.Async.fetchAll('SELECT * FROM owned_vehicles WHERE owner = @owner', {
   ['@owner'] = id,
 }, function(result)
@@ -243,7 +243,7 @@ AddEventHandler('prx_tablet:añadir_busqueda', function(nota, id)
   TriggerClientEvent('prx_tablet:updateSearch', source, id)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getSearch', function(source, cb, id)
+ESX.RegisterServerCallback('prx_tablet:getSearch', function(source, cb, id)
   MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier LIKE @identifier', {
 		['@identifier'] = id,
 	}, function(result)
@@ -273,7 +273,7 @@ AddEventHandler('prx_tablet:añadir_danger', function(nota, id)
   TriggerClientEvent('prx_tablet:updateDanger', source, id)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getDanger', function(source, cb, id)
+ESX.RegisterServerCallback('prx_tablet:getDanger', function(source, cb, id)
   MySQL.Async.fetchAll('SELECT * FROM users WHERE identifier LIKE @identifier', {
 		['@identifier'] = id,
 	}, function(result)
@@ -292,7 +292,7 @@ AddEventHandler('prx_tablet:delete_danger', function(id)
   TriggerClientEvent('prx_tablet:updateDanger', source, id)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getAllSearch', function(source, cb)
+ESX.RegisterServerCallback('prx_tablet:getAllSearch', function(source, cb)
   MySQL.Async.fetchAll('SELECT * FROM users WHERE search != @search', {
     ['@search'] = '{"inSearch":false,"motivo":""}',
 }, function(result)
@@ -303,8 +303,8 @@ end)
 
 RegisterServerEvent('prx_tablet:addTrat')
 AddEventHandler('prx_tablet:addTrat', function(identifier, label, price, time)
-    local xPlayer = PRX.GetPlayerFromId(source)
-    local xTarget = PRX.GetPlayerFromIdentifier(identifier)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local xTarget = ESX.GetPlayerFromIdentifier(identifier)
     MySQL.Async.execute('INSERT INTO prx_tab_ems_hist (identifier, doctor, label, price) VALUES (@identifier, @doctor, @label, @price)', {
       ['@identifier'] = identifier,
       ['@doctor'] = xPlayer.getJob().grade_label..' '..xPlayer.getName(),
@@ -329,7 +329,7 @@ AddEventHandler('prx_tablet:addTrat', function(identifier, label, price, time)
   TriggerClientEvent('prx_tablet:updateHistEMS', source, identifier)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getHistEMS', function(source, cb, id)
+ESX.RegisterServerCallback('prx_tablet:getHistEMS', function(source, cb, id)
   MySQL.Async.fetchAll('SELECT * FROM prx_tab_ems_hist WHERE identifier LIKE @identifier', {
 		['@identifier'] = id,
 	}, function(result)
@@ -357,8 +357,8 @@ AddEventHandler('prx_tablet:eliminar_hist_ems', function(info, id)
     TriggerClientEvent('prx_tablet:updateHistEMS', source, id)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getHistEmsPerf', function(source, cb)
-  local xPlayer = PRX.GetPlayerFromId(source)
+ESX.RegisterServerCallback('prx_tablet:getHistEmsPerf', function(source, cb)
+  local xPlayer = ESX.GetPlayerFromId(source)
   local id = xPlayer.getIdentifier()
   MySQL.Async.fetchAll('SELECT * FROM prx_tab_ems_hist WHERE identifier LIKE @identifier', {
 		['@identifier'] = id,
@@ -370,7 +370,7 @@ end)
 
 RegisterServerEvent('prx_tablet:añadirNotaEms')
 AddEventHandler('prx_tablet:añadirNotaEms', function(nota, id)
-  local xPlayer = PRX.GetPlayerFromId(source)
+  local xPlayer = ESX.GetPlayerFromId(source)
   MySQL.Async.execute('INSERT INTO prx_tab_ems_notes (identifier, sender, label) VALUES (@identifier, @sender, @note)', {
     ['@identifier'] = id,
     ['@sender'] = xPlayer.getJob().grade_label..' '..xPlayer.getName(),
@@ -380,7 +380,7 @@ AddEventHandler('prx_tablet:añadirNotaEms', function(nota, id)
   TriggerClientEvent('prx_tablet:updateNotasEms', source, id)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getNotasEms', function(source, cb, id)
+ESX.RegisterServerCallback('prx_tablet:getNotasEms', function(source, cb, id)
   MySQL.Async.fetchAll('SELECT * FROM prx_tab_ems_notes WHERE identifier LIKE @identifier', {
 		['@identifier'] = id,
 	}, function(result)
@@ -401,8 +401,8 @@ AddEventHandler('prx_tablet:eliminar_nota_ems', function(info, id)
   TriggerClientEvent('prx_tablet:updateNotasEms', source, id)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getEmpresaInfo', function(source, cb)
-  local xPlayer = PRX.GetPlayerFromId(source)
+ESX.RegisterServerCallback('prx_tablet:getEmpresaInfo', function(source, cb)
+  local xPlayer = ESX.GetPlayerFromId(source)
   if xPlayer.getJob().grade_name == 'boss' then
     MySQL.Async.fetchAll('SELECT * FROM users WHERE job = @job', {
       ['@job'] = xPlayer.getJob().name,
@@ -423,10 +423,10 @@ PRX.RegisterServerCallback('prx_tablet:getEmpresaInfo', function(source, cb)
   end
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getStockItems', function(source, cb)
-  local xPlayer = PRX.GetPlayerFromId(source)
+ESX.RegisterServerCallback('prx_tablet:getStockItems', function(source, cb)
+  local xPlayer = ESX.GetPlayerFromId(source)
   local job = xPlayer.getJob().name
-	TriggerEvent('prx_addoninventory:getSharedInventory', 'society_'..job, function(inventory)
+	TriggerEvent('esx_addoninventory:getSharedInventory', 'society_'..job, function(inventory)
     if Config.UseJobCreator == true then
       MySQL.Async.fetchAll('SELECT * FROM jobs_data WHERE job_name = @job AND type = @type', {
         ['@type'] = 'stash',
@@ -435,7 +435,7 @@ PRX.RegisterServerCallback('prx_tablet:getStockItems', function(source, cb)
             local info = inventory.items
             local decript = json.decode(result[1].data)
             for k in pairs(decript) do
-              table.insert(info, {name = k, label = PRX.GetItemLabel(k), count = decript[k]})
+              table.insert(info, {name = k, label = ESX.GetItemLabel(k), count = decript[k]})
             end
             Citizen.Wait(100)
             cb(info)
@@ -448,7 +448,7 @@ end)
 
 RegisterServerEvent('prx_tablet:degradarPlayer')
 AddEventHandler('prx_tablet:degradarPlayer', function(info)
-  local xPlayer = PRX.GetPlayerFromIdentifier(info.user.identifier)
+  local xPlayer = ESX.GetPlayerFromIdentifier(info.user.identifier)
   if xPlayer ~= nil then
     xPlayer.setJob(info.user.job, tonumber(info.user.job_grade) - 1)
   else
@@ -470,7 +470,7 @@ end)
 
 RegisterServerEvent('prx_tablet:ascenderPlayer')
 AddEventHandler('prx_tablet:ascenderPlayer', function(info)
-  local xPlayer = PRX.GetPlayerFromIdentifier(info.user.identifier)
+  local xPlayer = ESX.GetPlayerFromIdentifier(info.user.identifier)
   if xPlayer ~= nil then
     xPlayer.setJob(info.user.job, tonumber(info.user.job_grade) + 1)
   else
@@ -500,7 +500,7 @@ end)
 
 RegisterServerEvent('prx_tablet:despedirPlayer')
 AddEventHandler('prx_tablet:despedirPlayer', function(info)
-  local xPlayer = PRX.GetPlayerFromIdentifier(info.user.identifier)
+  local xPlayer = ESX.GetPlayerFromIdentifier(info.user.identifier)
   if xPlayer ~= nil then
     xPlayer.setJob('unemployed', 0)
   else
@@ -518,8 +518,8 @@ end)
 
 RegisterServerEvent('prx_tablet:addFine')
 AddEventHandler('prx_tablet:addFine', function(identifier, label, price, time)
-    local xPlayer = PRX.GetPlayerFromId(source)
-    local xTarget = PRX.GetPlayerFromIdentifier(identifier)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local xTarget = ESX.GetPlayerFromIdentifier(identifier)
     MySQL.Async.execute('INSERT INTO prx_tab_meca_hist (identifier, doctor, label, price) VALUES (@identifier, @doctor, @label, @price)', {
       ['@identifier'] = identifier,
       ['@doctor'] = xPlayer.getJob().grade_label..' '..xPlayer.getName(),
@@ -544,7 +544,7 @@ AddEventHandler('prx_tablet:addFine', function(identifier, label, price, time)
   TriggerClientEvent('prx_tablet:updateHistmeca', source, identifier)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getHistmeca', function(source, cb, id)
+ESX.RegisterServerCallback('prx_tablet:getHistmeca', function(source, cb, id)
   MySQL.Async.fetchAll('SELECT * FROM prx_tab_meca_hist WHERE identifier LIKE @identifier', {
 		['@identifier'] = id,
 	}, function(result)
@@ -572,8 +572,8 @@ AddEventHandler('prx_tablet:eliminar_hist_meca', function(info, id)
     TriggerClientEvent('prx_tablet:updateHistmeca', source, id)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getHistmecaPerf', function(source, cb)
-  local xPlayer = PRX.GetPlayerFromId(source)
+ESX.RegisterServerCallback('prx_tablet:getHistmecaPerf', function(source, cb)
+  local xPlayer = ESX.GetPlayerFromId(source)
   local id = xPlayer.getIdentifier()
   MySQL.Async.fetchAll('SELECT * FROM prx_tab_meca_hist WHERE identifier LIKE @identifier', {
 		['@identifier'] = id,
@@ -585,7 +585,7 @@ end)
 
 RegisterServerEvent('prx_tablet:añadirNotameca')
 AddEventHandler('prx_tablet:añadirNotameca', function(nota, id)
-  local xPlayer = PRX.GetPlayerFromId(source)
+  local xPlayer = ESX.GetPlayerFromId(source)
   MySQL.Async.execute('INSERT INTO prx_tab_meca_notes (identifier, sender, label) VALUES (@identifier, @sender, @note)', {
     ['@identifier'] = id,
     ['@sender'] = xPlayer.getJob().grade_label..' '..xPlayer.getName(),
@@ -595,7 +595,7 @@ AddEventHandler('prx_tablet:añadirNotameca', function(nota, id)
   TriggerClientEvent('prx_tablet:updateNotasmeca', source, id)
 end)
 
-PRX.RegisterServerCallback('prx_tablet:getNotasmeca', function(source, cb, id)
+ESX.RegisterServerCallback('prx_tablet:getNotasmeca', function(source, cb, id)
   MySQL.Async.fetchAll('SELECT * FROM prx_tab_meca_notes WHERE identifier LIKE @identifier', {
 		['@identifier'] = id,
 	}, function(result)
